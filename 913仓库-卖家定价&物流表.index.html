@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>913深圳宝安汇畅仓 产品定价测算表</title>
+    <style>
+        :root {
+            --bg: #f5f7fb;
+            --card-bg: #ffffff;
+            --primary: #1a73e8;
+            --border: #e0e4ea;
+            --text: #1f2937;
+            --text-secondary: #6b7280;
+            --success: #10b981;
+            --danger: #dc2626;
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.05),0 2px 4px -2px rgba(0,0,0,0.05);
+            --font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); font-family: var(--font); color: var(--text); line-height: 1.6; padding: 20px; }
+        .container { max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+        .header { background: var(--card-bg); border-radius: var(--radius); padding: 20px 24px; box-shadow: var(--shadow); }
+        .header h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 6px; }
+        .warehouse-info { font-size: 0.9rem; color: var(--text-secondary); }
+        .card { background: var(--card-bg); border-radius: var(--radius); padding: 20px 24px; box-shadow: var(--shadow); }
+        .card h2 { font-size: 1.1rem; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+        label { font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 2px; }
+        input { width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; font-family: var(--font); background: #fafbfc; transition: 0.15s; }
+        input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,115,232,0.1); }
+        input[readonly] { background: #f3f4f6; color: #4b5563; cursor: not-allowed; }
+        .warning-badge { background: #fef3c7; color: #b45309; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; }
+        .density-low { background: #fee2e2; color: #991b1b; font-weight: 700; }
+        .btn { padding: 10px 18px; border-radius: 8px; border: none; font-weight: 600; font-size: 0.9rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: 0.15s; font-family: var(--font); }
+        .btn-success { background: var(--success); color: #fff; }
+        .btn-success:hover { opacity: 0.9; }
+        .btn-danger { background: var(--danger); color: #fff; }
+        .btn-danger:hover { opacity: 0.9; }
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 12px; }
+        th { background: #f8fafd; font-weight: 600; text-align: left; padding: 10px 8px; border-bottom: 2px solid var(--border); white-space: nowrap; font-size: 0.75rem; }
+        td { padding: 8px; border-bottom: 1px solid #f1f3f5; }
+        .highlight-row { background: #f0fdf4; }
+        .text-right { text-align: right; }
+        .text-bold { font-weight: 700; }
+        .price-final { font-size: 1rem; color: var(--primary); font-weight: 700; }
+        .note { font-size: 0.75rem; color: var(--text-secondary); margin-top: 8px; background: #f8fafd; padding: 8px 12px; border-radius: 8px; }
+        .no-delivery { text-align: center; padding: 24px; color: var(--text-secondary); }
+        @media (max-width: 600px) { body { padding: 8px; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>📊 913深圳宝安汇畅仓 产品定价测算表</h1>
+        <div class="warehouse-info">
+            📍 仓库地址：广东省深圳市宝安区松岗街道沙浦围第一工业区16栋101-102 汇畅跨境<br>
+            📞 联系电话：19147951431（微信 / 企业微信同号）
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>⚙️ 成本与利润参数</h2>
+        <div class="grid-4">
+            <div><label>采购成本 (¥)</label><input type="number" id="purchaseCost" value="65" step="0.01"></div>
+            <div><label>物流打包费 (¥)</label><input type="number" id="packingFee" value="8" step="0.01"></div>
+            <div><label>平台佣金率 (%)</label><input type="number" id="commissionRate" value="12" step="0.1"></div>
+            <div><label>提现成本率 (%)</label><input type="number" id="withdrawFeeRate" value="1.2" step="0.1" readonly></div>
+            <div><label>尾程配送费率 (%)</label><input type="number" id="lastMileRate" value="2.0" step="0.1" readonly></div>
+            <div><label>收单业务费率 (%)</label><input type="number" id="acquiringRate" value="1.5" step="0.1" readonly></div>
+            <div><label>产品货损率 (%)</label><input type="number" id="lossRate" value="10" step="0.1"></div>
+            <div><label>目标利润率 (%)</label><input type="number" id="profitRate" value="15" step="0.1"></div>
+            <div><label>广告费率 (%)</label><input type="number" id="adRate" value="5" step="0.1"></div>
+            <div><label>汇率 (1¥ = ? ₽)</label><input type="number" id="exchangeRate" value="11.1176" step="0.01"></div>
+        </div>
+        <div class="note">
+            💡 定价公式：<b>人民币售价 = (采购成本 + 打包费 + 运费) ÷ (1 - 佣金率 - 提现成本率 - 尾程率 - 收单率 - 货损率 - 利润率 - 广告费率)</b><br>
+            卢布售价 = 人民币售价 × 汇率。提现成本、尾程、收单费为固定值，不可更改。
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>📦 产品参数</h2>
+        <div class="grid-3">
+            <div><label>实重 (KG)</label><input type="number" id="actualWeight" value="2" step="0.001"></div>
+            <div><label>长 (CM)</label><input type="number" id="length" value="30" step="0.1"></div>
+            <div><label>宽 (CM)</label><input type="number" id="width" value="20" step="0.1"></div>
+            <div><label>高 (CM)</label><input type="number" id="height" value="15" step="0.1"></div>
+            <div><label>三边和 (CM) <span style="font-size:0.7rem;color:var(--text-secondary)">自动</span></label><input type="text" id="sumDimensions" readonly></div>
+            <div><label>体积重 (KG) <span style="font-size:0.7rem;color:var(--text-secondary)">L×W×H÷12000</span></label><input type="text" id="volumeWeight" readonly></div>
+            <div><label>密度 (KG/M³) <span id="densityBadge"></span></label><input type="text" id="densityValue" readonly></div>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-success" onclick="calculateAll()">🔍 核算费用</button>
+            <button class="btn btn-danger" onclick="clearData()">🗑️ 清空数据</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>📋 自动匹配物流 & 定价结果</h2>
+        <div style="overflow-x:auto">
+            <table id="resultTable">
+                <thead>
+                    <tr>
+                        <th>渠道名称</th><th>时效</th><th>资费标准</th><th>计费重(KG)</th>
+                        <th>运费(¥)</th><th>打包费(¥)</th><th>总成本(¥)</th>
+                        <th>人民币售价(¥)</th><th>卢布售价(₽)</th><th>利润(¥)</th><th>利润率</th><th>状态</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div class="note">⚠️ 密度低于100 KG/M³ 会预警。若售价/重量/尺寸无匹配渠道，显示“无可配送的方式”。</div>
+    </div>
+</div>
+
+<script>
+(function() {
+    const PACKAGES = [
+        { id:'express_extra_small', displayName:'Express Extra Small', speed:'5-10天', ratePerKg:46.8, fixedFee:3.12, maxPrice:1500, maxWeight:0.5, maxSumDim:90, maxSide:60, useVolume:false },
+        { id:'standard_extra_small', displayName:'Standard Extra Small', speed:'10-15天', ratePerKg:36.4, fixedFee:3.12, maxPrice:1500, maxWeight:0.5, maxSumDim:90, maxSide:60, useVolume:false },
+        { id:'economy_extra_small', displayName:'Economy Extra Small', speed:'15-25天', ratePerKg:26, fixedFee:3.12, maxPrice:1500, maxWeight:0.5, maxSumDim:90, maxSide:60, useVolume:false },
+        { id:'express_budget', displayName:'Express Budget', speed:'5-10天', ratePerKg:34.32, fixedFee:23.92, maxPrice:1500, minWeight:0.501, maxWeight:30, maxSumDim:150, maxSide:60, useVolume:false },
+        { id:'standard_budget', displayName:'Standard Budget', speed:'10-15天', ratePerKg:26, fixedFee:23.92, maxPrice:1500, minWeight:0.501, maxWeight:30, maxSumDim:150, maxSide:60, useVolume:false },
+        { id:'economy_budget', displayName:'Economy Budget', speed:'15-25天', ratePerKg:17.68, fixedFee:23.92, maxPrice:1500, minWeight:0.501, maxWeight:30, maxSumDim:150, maxSide:60, useVolume:false },
+        { id:'express_small', displayName:'Express Small', speed:'5-10天', ratePerKg:46.8, fixedFee:16.64, minPrice:1501, maxPrice:7000, maxWeight:2, maxSumDim:150, maxSide:60, useVolume:false },
+        { id:'standard_small', displayName:'Standard Small', speed:'10-15天', ratePerKg:36.4, fixedFee:16.64, minPrice:1501, maxPrice:7000, maxWeight:2, maxSumDim:150, maxSide:60, useVolume:false },
+        { id:'economy_small', displayName:'Economy Small', speed:'15-25天', ratePerKg:26, fixedFee:16.64, minPrice:1501, maxPrice:7000, maxWeight:2, maxSumDim:150, maxSide:60, useVolume:false },
+        { id:'standard_big', displayName:'Standard Big', speed:'10-15天', ratePerKg:26, fixedFee:37.44, minPrice:1501, maxPrice:7000, minWeight:2.001, maxWeight:30, maxSumDim:310, maxSide:150, useVolume:true, maxVolumeWeight:31 },
+        { id:'economy_big', displayName:'Economy Big', speed:'15-25天', ratePerKg:17.68, fixedFee:37.44, minPrice:1501, maxPrice:7000, minWeight:2.001, maxWeight:30, maxSumDim:310, maxSide:150, useVolume:true, maxVolumeWeight:31 },
+        { id:'express_premium_small', displayName:'Express Premium Small', speed:'5-10天', ratePerKg:46.8, fixedFee:22.88, minPrice:7001, maxPrice:250000, maxWeight:5, maxSumDim:250, maxSide:150, useVolume:false },
+        { id:'standard_premium_small', displayName:'Standard Premium Small', speed:'10-15天', ratePerKg:36.4, fixedFee:22.88, minPrice:7001, maxPrice:250000, maxWeight:5, maxSumDim:250, maxSide:150, useVolume:false },
+        { id:'economy_premium_small', displayName:'Economy Premium Small', speed:'15-25天', ratePerKg:26, fixedFee:22.88, minPrice:7001, maxPrice:250000, maxWeight:5, maxSumDim:250, maxSide:150, useVolume:false },
+        { id:'standard_premium_big', displayName:'Standard Premium Big', speed:'10-15天', ratePerKg:29.12, fixedFee:64.48, minPrice:7001, maxPrice:250000, minWeight:5.001, maxWeight:30, maxSumDim:310, maxSide:150, useVolume:true, maxVolumeWeight:80 },
+        { id:'economy_premium_big', displayName:'Economy Premium Big', speed:'15-25天', ratePerKg:23.92, fixedFee:64.48, minPrice:7001, maxPrice:250000, minWeight:5.001, maxWeight:30, maxSumDim:310, maxSide:150, useVolume:true, maxVolumeWeight:80 }
+    ];
+
+    function getEl(id) { return document.getElementById(id); }
+
+    function readInputs() {
+        return {
+            purchaseCost: parseFloat(getEl('purchaseCost').value) || 0,
+            packingFee: parseFloat(getEl('packingFee').value) || 0,
+            commissionRate: parseFloat(getEl('commissionRate').value) / 100 || 0,
+            withdrawFeeRate: parseFloat(getEl('withdrawFeeRate').value) / 100,
+            lastMileRate: parseFloat(getEl('lastMileRate').value) / 100,
+            acquiringRate: parseFloat(getEl('acquiringRate').value) / 100,
+            lossRate: parseFloat(getEl('lossRate').value) / 100 || 0,
+            profitRate: parseFloat(getEl('profitRate').value) / 100 || 0,
+            adRate: parseFloat(getEl('adRate').value) / 100 || 0,   // 新增广告费率
+            exchangeRate: parseFloat(getEl('exchangeRate').value) || 11.1176,
+            actualWeight: parseFloat(getEl('actualWeight').value) || 0,
+            length: parseFloat(getEl('length').value) || 0,
+            width: parseFloat(getEl('width').value) || 0,
+            height: parseFloat(getEl('height').value) || 0,
+        };
+    }
+
+    function calcVolumeWeight(l,w,h) { return (l*w*h)/12000; }
+    function calcDensity(wt,l,w,h) { const vm = (l*w*h)/1000000; return vm>0 ? wt/vm : 0; }
+
+    function checkConstraints(pkg, billingWt, sumDim, maxSide, volWt) {
+        if (pkg.minWeight !== undefined && billingWt < pkg.minWeight) return false;
+        if (pkg.maxWeight !== undefined && billingWt > pkg.maxWeight) return false;
+        if (pkg.useVolume && pkg.maxVolumeWeight !== undefined && volWt > pkg.maxVolumeWeight) return false;
+        if (pkg.maxSumDim !== undefined && sumDim > pkg.maxSumDim) return false;
+        if (pkg.maxSide !== undefined && maxSide > pkg.maxSide) return false;
+        return true;
+    }
+
+    function calculateAll() {
+        const inp = readInputs();
+        const { actualWeight:aw, length:l, width:w, height:h, exchangeRate:e } = inp;
+        const volWt = calcVolumeWeight(l,w,h);
+        const sumDim = l+w+h, maxSide = Math.max(l,w,h);
+        const density = calcDensity(aw,l,w,h);
+
+        getEl('sumDimensions').value = sumDim.toFixed(1);
+        getEl('volumeWeight').value = volWt.toFixed(3);
+        getEl('densityValue').value = density.toFixed(1);
+        const dBadge = getEl('densityBadge');
+        dBadge.innerHTML = (density<100 && density>0) ? '<span class="warning-badge density-low">⚠ 密度过低 (<100)</span>' : '';
+
+        // 加入广告费率
+        const totalRate = inp.commissionRate + inp.withdrawFeeRate + inp.lastMileRate + inp.acquiringRate + inp.lossRate + inp.profitRate + inp.adRate;
+        const tbody = document.querySelector('#resultTable tbody');
+
+        if (totalRate >= 1) {
+            tbody.innerHTML = '<tr><td colspan="12" class="no-delivery" style="color:#dc2626;">❌ 各项费率总和已超过100%，无法定价。</td></tr>';
+            return;
+        }
+
+        const rows = [];
+        for (let pkg of PACKAGES) {
+            const billingWt = pkg.useVolume ? Math.max(aw, volWt) : aw;
+            if (!checkConstraints(pkg, billingWt, sumDim, maxSide, volWt)) continue;
+
+            const shipping = pkg.ratePerKg * billingWt + pkg.fixedFee;
+            const costSum = inp.purchaseCost + inp.packingFee + shipping;
+            const sellCNY = costSum / (1 - totalRate);
+            const sellRUB = sellCNY * e;
+
+            if (pkg.minPrice !== undefined && sellRUB < pkg.minPrice) continue;
+            if (pkg.maxPrice !== undefined && sellRUB > pkg.maxPrice) continue;
+
+            const profitCNY = sellCNY * inp.profitRate;
+            const profitRateDisplay = (profitCNY / sellCNY * 100).toFixed(1);
+            rows.push({ pkg, billingWt, shipping, costSum, sellCNY, sellRUB, profitCNY, profitRateDisplay });
+        }
+
+        if (rows.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="12" class="no-delivery">🚫 无可配送的方式</td></tr>';
+            return;
+        }
+
+        let bestIdx = 0;
+        rows.forEach((r,i) => { if (r.profitCNY > rows[bestIdx].profitCNY) bestIdx = i; });
+
+        tbody.innerHTML = '';
+        rows.forEach((r,i) => {
+            const isBest = i===bestIdx;
+            const tr = document.createElement('tr');
+            if (isBest) tr.classList.add('highlight-row');
+            tr.innerHTML = `
+                <td><b>${r.pkg.displayName}</b>${isBest?' 🏆':''}</td>
+                <td>${r.pkg.speed}</td>
+                <td>${r.pkg.ratePerKg.toFixed(2)}元/kg + ${r.pkg.fixedFee.toFixed(2)}元/票</td>
+                <td>${r.billingWt.toFixed(3)}</td>
+                <td class="text-right text-bold">¥${r.shipping.toFixed(2)}</td>
+                <td class="text-right">¥${inp.packingFee.toFixed(2)}</td>
+                <td class="text-right">¥${r.costSum.toFixed(2)}</td>
+                <td class="text-right price-final">¥${r.sellCNY.toFixed(2)}</td>
+                <td class="text-right price-final">₽${r.sellRUB.toFixed(2)}</td>
+                <td class="text-right">¥${r.profitCNY.toFixed(2)}</td>
+                <td class="text-right">${r.profitRateDisplay}%</td>
+                <td>✅ 可用</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function clearData() {
+        // 清空可编辑字段（汇率及不可更改字段保留）
+        getEl('purchaseCost').value = '';
+        getEl('packingFee').value = '';
+        getEl('commissionRate').value = '';
+        getEl('lossRate').value = '';
+        getEl('profitRate').value = '';
+        getEl('adRate').value = '';   // 新增清空广告费率
+        getEl('actualWeight').value = '';
+        getEl('length').value = '';
+        getEl('width').value = '';
+        getEl('height').value = '';
+
+        document.querySelector('#resultTable tbody').innerHTML = '';
+        getEl('sumDimensions').value = '';
+        getEl('volumeWeight').value = '';
+        getEl('densityValue').value = '';
+        getEl('densityBadge').innerHTML = '';
+    }
+
+    window.calculateAll = calculateAll;
+    window.clearData = clearData;
+})();
+</script>
+</body>
+</html>
